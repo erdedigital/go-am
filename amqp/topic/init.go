@@ -1,20 +1,13 @@
 package topic
 
-import (
-	"fmt"
-	"log"
+// func init() {
+// 	var err error
+// 	//load .env file
+// 	err = godotenv.Load()
+// 	if err != nil {
+// 		log.Fatal("Error loading .env file")
+// 	}
 
-	"github.com/joho/godotenv"
-)
-
-func init() {
-	var err error
-	//load .env file
-	err = godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	fmt.Println(exchangeName)
-	fmt.Println(typeName)
-}
+// 	fmt.Println(exchangeName)
+// 	fmt.Println(typeName)
+// }

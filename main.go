@@ -12,7 +12,7 @@ const (
 
 func main() {
 	publiseh := amqp.TopicPublish()
-	for i := 1; i < 5000; i++ {
+	for i := 1; i < 90000; i++ {
 		var payload = fmt.Sprintf("[%d] - %s", i, "OK")
 		publiseh.Push(routingKey, payload)
 	}
