@@ -1,11 +1,15 @@
 package config
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/streadway/amqp"
 )
 
 func ConnAMQP() *amqp.Connection {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672")
+	amqpURL := fmt.Sprintf("amqp://%s", os.Getenv("AMQP_URL"))
+	conn, err := amqp.Dial(amqpURL)
 	if err != nil {
 		panic(err)
 	}

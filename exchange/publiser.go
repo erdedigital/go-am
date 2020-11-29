@@ -2,27 +2,27 @@ package exchange
 
 import (
 	"log"
-	"github.com/erdedigital/go-amqp/exechange/services"
+
 	"github.com/streadway/amqp"
 )
 
-// Emitter for publishing AMQP events
-type Emitter struct {
+// Publish for publishing AMQP events
+type Publish struct {
 	connection *amqp.Connection
 }
 
-func (e *Emitter) setup() error {
+func (e *Publish) setup() error {
 	channel, err := e.connection.Channel()
 	if err != nil {
 		panic(err)
 	}
 
 	defer channel.Close()
-	return services.declareExchange(channel)
+	return declareExchange(channel)
 }
 
 // Push (Publish) a specified message to the AMQP exchange
-func (e *Emitter) Push(event string, severity string) error {
+func (e *Publish) Push(event string, routingKey string) error {
 	channel, err := e.connection.Channel()
 	if err != nil {
 		return err
@@ -31,8 +31,8 @@ func (e *Emitter) Push(event string, severity string) error {
 	defer channel.Close()
 
 	err = channel.Publish(
-		services.getExchangeName(),
-		severity,
+		getExchangeName(),
+		routingKey,
 		false,
 		false,
 		amqp.Publishing{
@@ -40,21 +40,21 @@ func (e *Emitter) Push(event string, severity string) error {
 			Body:        []byte(event),
 		},
 	)
-	log.Printf("Sending message: %s -> %s", event, services.getExchangeName())
+	log.Printf("Sending message: %s -> %s", event, getExchangeName())
 	return nil
 }
 
-// NewEventEmitter returns a new event.Emitter object
+// NewEventPublish returns a new event.Publish object
 // ensuring that the object is initialised, without error
-func NewEventEmitter(conn *amqp.Connection) (Emitter, error) {
-	emitter := Emitter{
+func NewEventPublish(conn *amqp.Connection) (Publish, error) {
+	publiser := Publish{
 		connection: conn,
 	}
 
-	err := emitter.setup()
+	err := publiser.setup()
 	if err != nil {
-		return Emitter{}, err
+		return Publish{}, err
 	}
 
-	return emitter, nil
+	return publiser, nil
 }
